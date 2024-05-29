@@ -11,9 +11,9 @@ public:
 	
 	cell() {
 		around = 0; condition = 0;
-		image = LoadImage("image/default.png");
-		texture = LoadTextureFromImage(image);
-		UnloadImage(image);
+		default_image = LoadImage("image/default.png");
+		default_texture = LoadTextureFromImage(default_image);
+		UnloadImage(default_image);
 		open = false;
 	}
 	
@@ -43,7 +43,12 @@ public:
 		open = _e;
 	}
 	Texture2D get_texture() {
-		return texture;
+		if (open) {
+			return texture;
+		}
+		else {
+			return default_texture;
+		}
 	}
 	void set_texture(Image _image) {
 		image = _image;
@@ -55,7 +60,9 @@ private:
 	int around; //сколько вокруг
 	bool open;
 	Image image; //Изображение
+	Image default_image;
 	Texture2D texture; //Его текстура
+	Texture2D default_texture;
 	
 	
 };
@@ -117,84 +124,20 @@ void draw_field(cell(*field)[30], int width, int height, int screenWidth, int sc
 	return;	
 }
 Image image_number_set(int i);
-void empty_check(cell(*field)[30], int x, int y, int width, int height) {
+void openEmptyCells(cell(* grid)[30], int x, int y, int width, int height) {
 	cout << x << " " << y << endl;
-	if (x > 0 && x < width - 1 && y>0 && y < height - 1) {
-		if(!field[x][y-1].is_open())field[x][y - 1].set_image(image_number_set(field[x][y - 1].get_around())); field[x][y - 1].set_open(true);
-		if (!field[x][y + 1].is_open())field[x][y + 1].set_image(image_number_set(field[x][y + 1].get_around())); field[x][y + 1].set_open(true);
-		if (!field[x-1][y -1].is_open())field[x-1][y + 1].set_image(image_number_set(field[x-1][y - 1].get_around())); field[x-1][y - 1].set_open(true);
-		if (!field[x+1][y - 1].is_open())field[x+1][y - 1].set_image(image_number_set(field[x+1][y - 1].get_around())); field[x+1][y - 1].set_open(true);
-		if (!field[x+1][y +1].is_open())field[x+1][y +1].set_image(image_number_set(field[1+x][y +1].get_around())); field[x+1][y +1].set_open(true);
-		if (!field[x - 1][y + 1].is_open())field[x -1][y + 1].set_image(image_number_set(field[ x-1][y + 1].get_around())); field[x - 1][y + 1].set_open(true);
-		if (!field[x-1][y].is_open())field[x-1][y].set_image(image_number_set(field[x-1][y].get_around())); field[x-1][y].set_open(true);
-		if (!field[x +1][y].is_open())field[x + 1][y].set_image(image_number_set(field[x + 1][y].get_around())); field[x + 1][y].set_open(true);
-	} else if (x == 0 && y == 0) {//Левый верхний угол
-		if (!field[x][y + 1].is_open())field[x][y + 1].set_image(image_number_set(field[x][y + 1].get_around())); field[x][y + 1].set_open(true);
-		if (!field[x + 1][y].is_open())field[x + 1][y].set_image(image_number_set(field[x + 1][y].get_around())); field[x + 1][y].set_open(true);
-		if (!field[x + 1][y + 1].is_open())field[x + 1][y + 1].set_image(image_number_set(field[1 + x][y + 1].get_around())); field[x + 1][y + 1].set_open(true);
-	}
-	else if (y == 0 && x != width - 1) {//верхняя граница
-		if (!field[x][y + 1].is_open())field[x][y + 1].set_image(image_number_set(field[x][y + 1].get_around())); field[x][y + 1].set_open(true);
-		if (!field[x + 1][y].is_open())field[x + 1][y].set_image(image_number_set(field[x + 1][y].get_around())); field[x + 1][y].set_open(true);
-		if (!field[x + 1][y + 1].is_open())field[x + 1][y + 1].set_image(image_number_set(field[1 + x][y + 1].get_around())); field[x + 1][y + 1].set_open(true);
-		if (!field[x - 1][y].is_open())field[x - 1][y].set_image(image_number_set(field[x - 1][y].get_around())); field[x - 1][y].set_open(true);
-		if (!field[x - 1][y +1].is_open())field[x - 1][y + 1].set_image(image_number_set(field[x - 1][y + 1].get_around())); field[x - 1][y + 1].set_open(true);
-
-	}
-	else if (y == 0 && x == width - 1) {//правый верхний угол
-		if (!field[x - 1][y].is_open())field[x - 1][y].set_image(image_number_set(field[x - 1][y].get_around())); field[x - 1][y].set_open(true);
-		if (!field[x - 1][y + 1].is_open())field[x - 1][y + 1].set_image(image_number_set(field[x - 1][y + 1].get_around())); field[x - 1][y + 1].set_open(true);
-		if (!field[x][y + 1].is_open())field[x][y + 1].set_image(image_number_set(field[x][y + 1].get_around())); field[x][y + 1].set_open(true);
-	}
-	else if (x == 0 && y != height - 1) {//левая граница
-		if (!field[x][y - 1].is_open())field[x][y - 1].set_image(image_number_set(field[x][y - 1].get_around())); field[x][y - 1].set_open(true);
-		if (!field[x + 1][y - 1].is_open())field[x + 1][y - 1].set_image(image_number_set(field[x + 1][y - 1].get_around())); field[x + 1][y - 1].set_open(true);
-		if (!field[x][y + 1].is_open())field[x][y + 1].set_image(image_number_set(field[x][y + 1].get_around())); field[x][y + 1].set_open(true);
-		if (!field[x + 1][y].is_open())field[x + 1][y].set_image(image_number_set(field[x + 1][y].get_around())); field[x + 1][y].set_open(true);
-		if (!field[x + 1][y + 1].is_open())field[x + 1][y + 1].set_image(image_number_set(field[1 + x][y + 1].get_around())); field[x + 1][y + 1].set_open(true);
-	}
-	else if (y == height - 1 && x == 0) {//Левый нижний угол
-		if (!field[x][y - 1].is_open())field[x][y - 1].set_image(image_number_set(field[x][y - 1].get_around())); field[x][y - 1].set_open(true);
-		if (!field[x + 1][y -1].is_open())field[x + 1][y - 1].set_image(image_number_set(field[x + 1][y - 1].get_around())); field[x + 1][y - 1].set_open(true);
-		if (!field[x+1][y].is_open())field[x][y].set_image(image_number_set(field[x][y].get_around())); field[x][y].set_open(true);
-	}
-	else if (y == height - 1 && x != width - 1) {//нижняя граница
-		if (!field[x][y - 1].is_open())field[x][y - 1].set_image(image_number_set(field[x][y - 1].get_around())); field[x][y - 1].set_open(true);
-		if (!field[x + 1][y].is_open())field[x][y].set_image(image_number_set(field[x][y].get_around())); field[x][y].set_open(true);
-		if (!field[x - 1][y].is_open())field[x - 1][y].set_image(image_number_set(field[x - 1][y].get_around())); field[x - 1][y].set_open(true);
-		if (!field[x + 1][y - 1].is_open())field[x + 1][y - 1].set_image(image_number_set(field[x + 1][y - 1].get_around())); field[x + 1][y - 1].set_open(true);
-		if (!field[x - 1][y - 1].is_open())field[x - 1][y + 1].set_image(image_number_set(field[x - 1][y + 1].get_around())); field[x - 1][y - 1].set_open(true);
-	}
-	else if (y == height - 1 && x == width - 1) {//правый нижний угол
-		if (!field[x - 1][y].is_open())field[x - 1][y].set_image(image_number_set(field[x - 1][y].get_around())); field[x - 1][y].set_open(true);
-		if (!field[x - 1][y - 1].is_open())field[x - 1][y + 1].set_image(image_number_set(field[x - 1][y + 1].get_around())); field[x - 1][y - 1].set_open(true);
-		if (!field[x][y - 1].is_open())field[x][y - 1].set_image(image_number_set(field[x][y - 1].get_around())); field[x][y - 1].set_open(true);
-	}
-	else if (x == width - 1 && y != 0) {//правая граница
-		if (!field[x - 1][y - 1].is_open())field[x - 1][y + 1].set_image(image_number_set(field[x - 1][y + 1].get_around())); field[x - 1][y - 1].set_open(true);
-		if (!field[x - 1][y].is_open())field[x - 1][y].set_image(image_number_set(field[x - 1][y].get_around())); field[x - 1][y].set_open(true);
-		if (!field[x - 1][y + 1].is_open())field[x - 1][y + 1].set_image(image_number_set(field[x - 1][y + 1].get_around())); field[x - 1][y + 1].set_open(true);
-		if (!field[x][y + 1].is_open())field[x][y + 1].set_image(image_number_set(field[x][y + 1].get_around())); field[x][y + 1].set_open(true);
-		if (!field[x][y - 1].is_open())field[x][y - 1].set_image(image_number_set(field[x][y - 1].get_around())); field[x][y - 1].set_open(true);
-
-
-	}
-
-
-
-
-
-	if (field[x][y - 1].get_around() == 0)empty_check(field, x, y - 1, width, height);
-	if (field[x][y + 1].get_around() == 0)empty_check(field, x, y + 1, width, height);
-	if (field[x-1][y + 1].get_around() == 0)empty_check(field, x-1, y + 1, width, height);
-	if (field[x+1][y - 1].get_around() == 0)empty_check(field, x+1, y - 1, width, height);
-	if (field[x+1][y + 1].get_around() == 0)empty_check(field, x+1, y + 1, width, height);
-	if (field[x-1][y +1].get_around() == 0)empty_check(field, x-1, y + 1, width, height);
-	if (field[x-1][y].get_around() == 0)empty_check(field, x-1, y, width, height);
-	if (field[x+1][y].get_around() == 0)empty_check(field, x+1, y, width, height);
-
-
 	
+	if (x < 0 || x >= width || y < 0 || y >= height || grid[x][y].is_open() || grid[x][y].get_condition() == 1)
+		return;
+
+	grid[x][y].set_open(true);
+	
+	if (grid[x][y].get_around() == 0) {
+		openEmptyCells(grid, x-1, y, width, height);
+		openEmptyCells(grid, x+1, y, width, height);
+		openEmptyCells(grid, x, y-1, width, height);
+		openEmptyCells(grid, x, y+1, width, height);
+	}
 	
 }
 Image image_number_set(int i) {
@@ -249,7 +192,7 @@ int main() {
 	Image image6 = LoadImage("Image/6.png");ImageResize(&image6, 50, 50);
 	Image image7 = LoadImage("Image/7.png");ImageResize(&image7, 50, 50);
 	ImageResize(&default_image, 50, 50);
-	ImageResize(&open_image, 50, 50);
+	
 	int coor_x = 5, coor_y = 3;
 	cell field[30][30];
 
@@ -258,6 +201,7 @@ int main() {
 			a = rand() % 10; if (a != 1) { a = 0; }
 			field[j][i].set_condition(a);
 			
+			
 		}
 	}
 	
@@ -265,10 +209,37 @@ int main() {
 		for (int j = 0; j < width; j++) {
 			a = min_count(field, j, i, width, height);
 			field[j][i].set_around(a);
+				switch (a) {
+			case 0:
+				if (field[j][i].get_condition() != 1) {
+					field[j][i].set_image(open_image);
+				}
+				else {
+					field[j][i].set_image(mine);
+					
+				}
+				break;
+
+			case 1:
+				field[j][i].set_image(image1); break;
+			case 2:
+				field[j][i].set_image(image2); break;
+			case 3:
+				field[j][i].set_image(image3); break;
+			case 4:
+				field[j][i].set_image(image4); break;
+			case 5:
+				field[j][i].set_image(image5); break;
+			case 6:
+				field[j][i].set_image(image6); break;
+			case 7:
+				field[j][i].set_image(image7); break;
+
+			}
 			
 		}
 	}
-	
+
 	Camera2D camera = { 0 };
 
 	int x_perem = 0, y_perem = 0;
@@ -303,15 +274,18 @@ int main() {
 			x_int_cell = (int)x_cell; y_int_cell = (int)y_cell;
 			if (x_int_cell >= 0 && y_int_cell >= 0) {
 				int j = x_int_cell, i = y_int_cell;
+				
 				if (field[j][i].get_condition() == 1) {
 					field[j][i].set_texture(mine);
+					field[j][i].set_open(true);
 				}
 				else {
 					a = field[j][i].get_around();
+					if (a != 0)field[j][i].set_open(true);
 					switch (a) {
 					case 0:
 						field[j][i].set_texture(open_image);
-						empty_check(field, j, i, width, height);
+						openEmptyCells(field, j, i, width, height);
 						break;
 					case 1:
 						field[j][i].set_texture(image1);  break;
