@@ -1,0 +1,281 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Raylib-CsLo</name>
+    </assembly>
+    <members>
+        <member name="T:Raylib_CsLo.NativeInheritanceAttribute">
+            <summary>Defines the base type of a struct as it was in the native signature.</summary>
+        </member>
+        <member name="M:Raylib_CsLo.NativeInheritanceAttribute.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:Raylib_CsLo.NativeInheritanceAttribute" /> class.</summary>
+            <param name="name">The name of the base type that was inherited from in the native signature.</param>
+        </member>
+        <member name="P:Raylib_CsLo.NativeInheritanceAttribute.Name">
+            <summary>Gets the name of the base type that was inherited from in the native signature.</summary>
+        </member>
+        <member name="T:Raylib_CsLo.NativeTypeNameAttribute">
+            <summary>Defines the type of a member as it was used in the native signature.</summary>
+        </member>
+        <member name="M:Raylib_CsLo.NativeTypeNameAttribute.#ctor(System.String)">
+            <summary>Initializes a new instance of the <see cref="T:Raylib_CsLo.NativeTypeNameAttribute" /> class.</summary>
+            <param name="name">The name of the type that was used in the native signature.</param>
+        </member>
+        <member name="P:Raylib_CsLo.NativeTypeNameAttribute.Name">
+            <summary>Gets the name of the type that was used in the native signature.</summary>
+        </member>
+        <member name="M:Raylib_CsLo.Raylib.TextFormat(System.SByte*,)">
+            <summary>
+            dealing with __arglist: https://www.c-sharpcorner.com/UploadFile/b942f9/calling-unmanaged-functions-which-take-a-variable-number-of-arguments-from-C-Sharp/
+            </summary>
+        </member>
+        <member name="M:Raylib_CsLo.Raylib.SetShaderValueV``1(Raylib_CsLo.Shader,System.Int32,System.Span{``0},Raylib_CsLo.ShaderUniformDataType,System.Int32)">
+            <summary>
+            'vector' (array) version of this function.  
+            </summary>
+        </member>
+        <member name="M:Raylib_CsLo.Raylib.SetShaderValueV``1(Raylib_CsLo.Shader,System.Int32,``0@,Raylib_CsLo.ShaderUniformDataType,System.Int32)">
+            <summary>
+            'vector' (array) version of this function.  can pass a `ref` to an arrayItem instead of the entire array
+            </summary>
+        </member>
+        <member name="M:Raylib_CsLo.Raylib.LoadModelAnimations(System.String)">
+            <summary>
+            free animations via UnloadModelAnimation() when done
+            </summary>
+            <param name="fileName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Raylib_CsLo.Raylib.LoadFontEx(System.String,System.Int32,System.Int32)">
+            <summary>
+            safe override, using NULL for the `fontChars` argument.
+            </summary>
+        </member>
+        <member name="T:Raylib_CsLo.VtblIndexAttribute">
+            <summary>Defines the vtbl index of a method as it was in the native signature.</summary>
+        </member>
+        <member name="M:Raylib_CsLo.VtblIndexAttribute.#ctor(System.UInt32)">
+            <summary>Initializes a new instance of the <see cref="T:Raylib_CsLo.VtblIndexAttribute" /> class.</summary>
+            <param name="index">The vtbl index of a method as it was in the native signature.</param>
+        </member>
+        <member name="P:Raylib_CsLo.VtblIndexAttribute.Index">
+            <summary>Gets the vtbl index of a method as it was in the native signature.</summary>
+        </member>
+        <member name="T:Raylib_CsLo.InternalHelpers.Bool">
+            <summary>
+            helper marshalling struct convert byte sized CBOOL's to/from dotnet
+            <para>You should be able to ignore this type.   treat it just as you would a normal bool.</para>
+            </summary>
+            <remarks> see here for some reasoning behind this type: https://docs.microsoft.com/en-us/dotnet/standard/native-interop/customize-struct-marshaling#customizing-boolean-field-marshaling
+            <para>the native structs that use bool expect it to be the size of byte, so this type lets it be that, and yet east for managed code to treat it as a boolean</para></remarks>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.Bool._val">
+            <summary>
+            private to prevent abuse.   Managed code should treat this as a bool.
+            </summary>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.Helpers.Utf8ToString``1(``0*)">
+            <summary>
+            help convert a utf8 vector to string
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="utf8Text"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Raylib_CsLo.InternalHelpers.Printf">
+            <summary>
+            Contains the printf family of functions.
+            It supports the following formats: 'diufeExXoscp';
+            The following flags: '-+ #0';
+            Width and precision;
+            Length (h, l) for hexadecimal output (for other formats, integers are treated as Int64 or UInt64)
+            
+            Decimal separator is not localized, it is always a '.' character.
+            %g and %G does not remove trailing zeroes.
+            NaN and infinities are not guaranteed to have a fixed representation accross platforms.
+            
+            At the moment, it does NOT support %n (number of chars printed, through a prointer),
+             and the 1$..n$ position specifier.
+            </summary>
+            <remarks>from https://sourceforge.net/projects/printfnet/  MIT License</remarks>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.Printf.sprintf(System.String,System.Object[])">
+            <summary>
+            Formats the arguments according to the format string.
+            Returns the result as a string.
+            </summary>
+            <param name="format">The format string</param>
+            <param name="args">The objects to format</param>
+            <returns>The formatted output</returns>
+            <exception cref="T:System.ArgumentException">The format string is invalid or too few arguments provided.</exception>
+            <exception cref="T:System.ArgumentNullException">Format string is null</exception>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.Printf.printf(System.String,System.Object[])">
+            <summary>
+            Formats the arguments according to the format string,
+            and writes the formatted string to the standard output.
+            </summary>
+            <param name="format">The format string</param>
+            <param name="args">The objects to format</param>
+            <exception cref="T:System.ArgumentException">The format string is invalid or too few arguments provided.</exception>
+            <exception cref="T:System.ArgumentNullException">Format string is null</exception>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.Printf.fprintf(System.IO.TextWriter,System.String,System.Object[])">
+            <summary>
+            Formats the arguments according to the format string,
+            and writes the formatted string to the specified TextWriter.
+            </summary>
+            <param name="writer">The target TextWriter</param>
+            <param name="format">The format string</param>
+            <param name="args">The objects to format</param>
+            <exception cref="T:System.ArgumentException">The format string is invalid or too few arguments provided.</exception>
+            <exception cref="T:System.ArgumentNullException">Format string or TextWriter is null</exception>
+        </member>
+        <member name="T:Raylib_CsLo.InternalHelpers.FormatObject">
+            <summary>
+            Applies string formatting to objects using a "printf" format string.
+            Can be extended to use custom formats.
+            </summary>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.FormatObject.DefaultPrecision">
+            <summary>
+             The default precision for floating point numbers
+             </summary>
+        </member>
+        <member name="T:Raylib_CsLo.InternalHelpers.FormatObject.FormatStringPart">
+            <summary>
+            Represents a formatting part of the format string (i.e. %1.3d)
+            All fields are interpreted as specified in the C language specification
+            </summary>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.FormatObject.FormatStringPart.width">
+            <summary>
+            Minimum width
+            </summary>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.FormatObject.FormatStringPart.precision">
+            <summary>
+            Precision
+            </summary>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.FormatObject.FormatStringPart.length">
+            <summary>
+            Length (h or l)
+            </summary>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.FormatObject.FormatStringPart.specifier">
+            <summary>
+            Specifier (s for strings, d for integers etc.)
+            </summary>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.FormatObject.FormatStringPart.LeftAlign">
+            <summary>
+            Left aligns the result instead of the default right align
+            </summary>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.FormatObject.FormatStringPart.ForcePlus">
+            <summary>
+            Displays + cahracter for positive numbers (by default it is omitted)
+            </summary>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.FormatObject.FormatStringPart.BlankIfPlus">
+            <summary>
+            Displays ' ' (space) character for positive numbers (by default it is omitted)
+            </summary>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.FormatObject.FormatStringPart.HashMark">
+            <summary>
+            Has different meanings for format specifiers
+            </summary>
+        </member>
+        <member name="F:Raylib_CsLo.InternalHelpers.FormatObject.FormatStringPart.PadWithZero">
+            <summary>
+            If LeftAlign = false, pads with the '0' character instead of ' '.
+            If LeftAlign = true, this flag is ignored.
+            </summary>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.FormatObject.#ctor(System.String)">
+            <summary>
+            Creates a new formatter with the default formatters (used by the printf functions).
+            </summary>
+            <param name="format"></param>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.FormatObject.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new formatter with or without the default formatters (used by the printf functions).
+            </summary>
+            <param name="format">The format string</param>
+            <param name="useDefaultFormatters">Load the default formatters or not</param>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.FormatObject.SetArgs(System.Object[])">
+            <summary>
+            Set the objects to format.
+            If they are already set, the function will overwrite them.
+            This is useful if you want to use the same format string to
+            format many objects.
+            </summary>
+            <param name="objs">The list of objects</param>
+        </member>
+        <member name="T:Raylib_CsLo.InternalHelpers.FormatObject.Formatter">
+            <summary>
+            Formats the object according to the FormatStringPart argument.
+            If you create a custom formatter, you should ignore the width property,
+            as padding is done independently for all format types.
+            </summary>
+            <param name="part">It contains the flags, specifier etc.</param>
+            <param name="arg">The object to format</param>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.FormatObject.AddFormatter(System.Char,Raylib_CsLo.InternalHelpers.FormatObject.Formatter)">
+            <summary>
+            Adds a custom formatter.
+            </summary>
+            <param name="specifier">The character in the format string (e.g. 's' for %s)</param>
+            <param name="formatter">The formatter function</param>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.FormatObject.ToString">
+            <summary>
+            Returns the formatted string.
+            </summary>
+            <returns>The formatted string</returns>
+        </member>
+        <member name="T:Raylib_CsLo.InternalHelpers.FormatObject.FormatResult">
+            <summary>
+            The results of the Formatter type functions.
+            </summary>
+        </member>
+        <member name="P:Raylib_CsLo.InternalHelpers.FormatObject.FormatResult.Sign">
+            <summary>
+            The resulting strings sign, if any.
+            </summary>
+        </member>
+        <member name="P:Raylib_CsLo.InternalHelpers.FormatObject.FormatResult.Result">
+            <summary>
+            The resulting string, without the sign if any.
+            </summary>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.FormatObject.FormatResult.op_Implicit(System.String)~Raylib_CsLo.InternalHelpers.FormatObject.FormatResult">
+            <summary>
+            Converts to string into a FormatResult object.
+            The string is assigned to the Result property of the created FormatString,
+            the Sign property will be "" (empty string).
+            </summary>
+            <param name="s">The string to convert</param>
+            <returns>A FormatResult object</returns>
+        </member>
+        <member name="M:Raylib_CsLo.InternalHelpers.zz_Extensions.AsPtr``1(Microsoft.Toolkit.HighPerformance.Buffers.SpanOwner{``0})">
+            <summary>
+            if an empty span is supplied, marshalls a NULL pointer.
+            </summary>
+            <typeparam name="TPtr"></typeparam>
+            <param name="spanOwner"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Raylib_CsLo.CsLoSettings.openGl43">
+            <summary>
+            experimental, for win-x64 only. 
+            <para>only works with limitations: https://github.com/NotNotTech/Raylib-CsLo/issues/2</para>
+            other platforms should leave this disabled, or if your computer only supports ogl 3.3
+            </summary>
+        </member>
+    </members>
+</doc>

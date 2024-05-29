@@ -1,0 +1,6 @@
+﻿  main.cpp
+C:\hui\Project1\main.cpp(176,12): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\hui\Project1\main.cpp(270,19): warning C4244: +=: преобразование "float" в "int", возможна потеря данных
+C:\hui\Project1\main.cpp(270,38): warning C4244: +=: преобразование "float" в "int", возможна потеря данных
+C:\hui\Project1\main.cpp(173): warning C4715: image_number_set: значение возвращается не при всех путях выполнения
+  Project1.vcxproj -> C:\hui\Project1\x64\Debug\Project1.exe
