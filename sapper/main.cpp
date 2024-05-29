@@ -4,7 +4,7 @@
 #include <string>
 #include "raymath.h"
 #include "rlgl.h"
-
+#include <ctime>
 using namespace std;
 class cell {
 public:
@@ -125,8 +125,6 @@ void draw_field(cell(*field)[30], int width, int height, int screenWidth, int sc
 }
 Image image_number_set(int i);
 void openEmptyCells(cell(* grid)[30], int x, int y, int width, int height) {
-	cout << x << " " << y << endl;
-	
 	if (x < 0 || x >= width || y < 0 || y >= height || grid[x][y].is_open() || grid[x][y].get_condition() == 1)
 		return;
 
@@ -137,6 +135,10 @@ void openEmptyCells(cell(* grid)[30], int x, int y, int width, int height) {
 		openEmptyCells(grid, x+1, y, width, height);
 		openEmptyCells(grid, x, y-1, width, height);
 		openEmptyCells(grid, x, y+1, width, height);
+		openEmptyCells(grid, x - 1, y-1, width, height);
+		openEmptyCells(grid, x - 1, y+1, width, height);
+		openEmptyCells(grid, x + 1, y+1, width, height);
+		openEmptyCells(grid, x + 1, y-1, width, height);
 	}
 	
 }
@@ -171,8 +173,10 @@ Image image_number_set(int i) {
 }
 
 int main() {
+	srand(time(0));
 	SetTraceLogLevel(LOG_NONE);
-
+	bool first_klick = true, alive = true;
+	int start_x, start_y;
 	setlocale(LC_ALL, "Russian");
 	const int screenWidth = 800;
 	const int screenHeight = 450;
@@ -184,6 +188,7 @@ int main() {
 	Image default_image = LoadImage("Image/default.png");
 	Image open_image = LoadImage("Image/empty.png"); ImageResize(&open_image, 50, 50);
 	Image mine = LoadImage("Image/mine.png"); ImageResize(&mine, 50, 50);
+	Image flag = LoadImage("Image/flag.png"); ImageResize(&flag, 50, 50);
 	Image image1 = LoadImage("Image/1.png"); ImageResize(&image1, 50, 50);
 	Image image2 = LoadImage("Image/2.png");ImageResize(&image2, 50, 50);
 	Image image3 = LoadImage("Image/3.png");ImageResize(&image3, 50, 50);
@@ -191,14 +196,14 @@ int main() {
 	Image image5 = LoadImage("Image/5.png");ImageResize(&image5, 50, 50);
 	Image image6 = LoadImage("Image/6.png");ImageResize(&image6, 50, 50);
 	Image image7 = LoadImage("Image/7.png");ImageResize(&image7, 50, 50);
-	ImageResize(&default_image, 50, 50);
+	
 	
 	int coor_x = 5, coor_y = 3;
 	cell field[30][30];
 
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
-			a = rand() % 10; if (a != 1) { a = 0; }
+			a = rand() % 6; if (a != 1) { a = 0; }
 			field[j][i].set_condition(a);
 			
 			
@@ -248,7 +253,7 @@ int main() {
 	int x_int_cell = 0, y_int_cell = 0;
 	camera.zoom = 1.0f;
 	int zoomMode = 0;   // 0-Mouse Wheel, 1-Mouse Move
-	UnloadImage(default_image);
+	
 	SetTargetFPS(60);
 	bool start = true;
 	while (!WindowShouldClose())        
@@ -264,67 +269,104 @@ int main() {
 			
 			pointX += delta.x; pointY += delta.y;
 		}
-		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && alive) {
+			if (!first_klick) {
+
+				x_cell = (Cursor.x + pointX) * bliz_coef; x_cell /= 50;
+				y_cell = (Cursor.y + pointY) * bliz_coef; y_cell /= 50;
+
+				x_int_cell = (int)x_cell; y_int_cell = (int)y_cell;
+				if (x_int_cell >= 0 && y_int_cell >= 0) {
+					int j = x_int_cell, i = y_int_cell;
+
+					if (field[j][i].get_condition() == 1) {
+						field[j][i].set_texture(mine);
+						field[j][i].set_open(true);
+						alive = false;
+					}
+					else {
+						a = field[j][i].get_around();
+						if (a != 0)field[j][i].set_open(true);
+						switch (a) {
+						case 0:
+							field[j][i].set_texture(open_image);
+							openEmptyCells(field, j, i, width, height);
+							break;
+						case 1:
+							field[j][i].set_texture(image1);  break;
+						case 2:
+							field[j][i].set_texture(image2);break;
+						case 3:
+							field[j][i].set_texture(image3);break;
+						case 4:
+							field[j][i].set_texture(image4);break;
+						case 5:
+							field[j][i].set_texture(image5);break;
+						case 6:
+							field[j][i].set_texture(image6);break;
+						case 7:
+							field[j][i].set_texture(image7);break;
+
+						}
+						if (a != 0) {
+							field[j][i].set_open(true);
+						}
+					}
+
+				}
+			}
+			else {
+				x_cell = (Cursor.x + pointX) * bliz_coef; x_cell /= 50;
+				y_cell = (Cursor.y + pointY) * bliz_coef; y_cell /= 50;
+
+				start_x = (int)x_cell; start_y = (int)y_cell;
+
+				field[start_x][start_y].set_around(0); field[start_x][start_y].set_image(open_image);
+				openEmptyCells(field, start_x, start_y, width, height);
+				first_klick = false;
+			}
 			
-		
-			cout << Cursor.x+pointX << " " << Cursor.y+pointY << endl;
+		}
+		if (IsMouseButtonPressed(MOUSE_MIDDLE_BUTTON) && alive) {
 			x_cell = (Cursor.x + pointX) * bliz_coef; x_cell /= 50;
 			y_cell = (Cursor.y + pointY) * bliz_coef; y_cell /= 50;
-			
+
 			x_int_cell = (int)x_cell; y_int_cell = (int)y_cell;
 			if (x_int_cell >= 0 && y_int_cell >= 0) {
 				int j = x_int_cell, i = y_int_cell;
-				
-				if (field[j][i].get_condition() == 1) {
-					field[j][i].set_texture(mine);
-					field[j][i].set_open(true);
-				}
-				else {
-					a = field[j][i].get_around();
-					if (a != 0)field[j][i].set_open(true);
-					switch (a) {
-					case 0:
-						field[j][i].set_texture(open_image);
-						openEmptyCells(field, j, i, width, height);
-						break;
-					case 1:
-						field[j][i].set_texture(image1);  break;
-					case 2:
-						field[j][i].set_texture(image2);break;
-					case 3:
-						field[j][i].set_texture(image3);break;
-					case 4:
-						field[j][i].set_texture(image4);break;
-					case 5:
-						field[j][i].set_texture(image5);break;
-					case 6:
-						field[j][i].set_texture(image6);break;
-					case 7:
-						field[j][i].set_texture(image7);break;
-
-					}
-					if (a != 0) {
+					if (field[j][i].get_condition() != -1 && !field[j][i].is_open()) {
+						field[j][i].set_texture(flag);
+						field[j][i].set_condition(-1);
 						field[j][i].set_open(true);
+					} 
+					else if (field[j][i].get_condition() == -1){
+						field[j][i].set_texture(default_image);
+						if (field[j][i].get_around() != 0) {
+							field[j][i].set_condition(0);
+						}
+						else {
+							field[j][i].set_condition(1);
+						}
+						field[j][i].set_open(false);
 					}
-				}
-					
+				
 			}
-			
-		}
-		
-		
-		BeginDrawing();
 
-		
-		
-		ClearBackground(RAYWHITE);
-		BeginMode2D(camera);
-		for (int i = 0;i < 30; i++) {
-			for (int j = 0; j < 30; j++) {
-				DrawTexture(field[j][i].get_texture(), j * 50, i*50, WHITE);	
-			}
 		}
-		EndDrawing();
+		
+		
+			
+			BeginDrawing();
+			ClearBackground(RAYWHITE);
+			BeginMode2D(camera);
+			for (int i = 0;i < 30; i++) {
+				for (int j = 0; j < 30; j++) {
+					DrawTexture(field[j][i].get_texture(), j * 50, i * 50, WHITE);
+				}
+			}
+			EndDrawing();
+		
+		
 		//----------------------------------------------------------------------------------
 	}
 
