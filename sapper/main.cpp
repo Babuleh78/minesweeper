@@ -288,8 +288,8 @@ int main() {
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && alive) {
 			if (!first_klick) {
 				
-				x_cell = (Cursor.x + pointX) * bliz_coef; x_cell /= 50;
-				y_cell = (Cursor.y + pointY) * bliz_coef; y_cell /= 50;
+				x_cell = (Cursor.x + pointX); x_cell /= 50;
+				y_cell = (Cursor.y + pointY); y_cell /= 50;
 
 				x_int_cell = (int)x_cell; y_int_cell = (int)y_cell;
 				if (x_cell >= 0 && y_cell >= 0) {
