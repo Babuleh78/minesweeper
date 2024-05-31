@@ -239,17 +239,14 @@ int main() {
 	Image image5 = LoadImage("Image/5.png");ImageResize(&image5, 50, 50);
 	Image image6 = LoadImage("Image/6.png");ImageResize(&image6, 50, 50);
 	Image image7 = LoadImage("Image/7.png");ImageResize(&image7, 50, 50);
-	
-	
-	int coor_x = 5, coor_y = 3;
 	cell field[30][30];
 
 	Rectangle rec{ 300, 200, 200, 50 };
 	
 	Camera2D camera = { 0 };
-char bombs[50]; strcpy(bombs, "Bombs count"); 
+	char bombs[50]; strcpy(bombs, "Bombs count"); 
 	int pointX = 0, pointY = 0;//Координаты левой верхней ячейки
-	float x_cell = 0, y_cell = 0, bliz_coef = 1;
+	float x_cell = 0, y_cell = 0;
 	int x_int_cell = 0, y_int_cell = 0;
 	camera.zoom = 1.0f;
 	int zoomMode = 0;   // 0-Mouse Wheel, 1-Mouse Move
@@ -336,8 +333,8 @@ char bombs[50]; strcpy(bombs, "Bombs count");
 				}
 			}
 			else {
-				x_cell = (Cursor.x + pointX) * bliz_coef; x_cell /= 50;
-				y_cell = (Cursor.y + pointY) * bliz_coef; y_cell /= 50;
+				x_cell = (Cursor.x + pointX); x_cell /= 50;
+				y_cell = (Cursor.y + pointY); y_cell /= 50;
 				if (y_cell >= 0 && x_cell >= 0) {
 					start_x = (int)x_cell; start_y = (int)y_cell;
 					for (int i = 0; i < height; i++) {
@@ -399,8 +396,8 @@ char bombs[50]; strcpy(bombs, "Bombs count");
 			
 		}
 		if (IsMouseButtonPressed(MOUSE_MIDDLE_BUTTON) && alive && !first_klick) {
-			x_cell = (Cursor.x + pointX) * bliz_coef; x_cell /= 50;
-			y_cell = (Cursor.y + pointY) * bliz_coef; y_cell /= 50;
+			x_cell = (Cursor.x + pointX); x_cell /= 50;
+			y_cell = (Cursor.y + pointY); y_cell /= 50;
 			
 			x_int_cell = (int)x_cell; y_int_cell = (int)y_cell;
 			if (x_int_cell >= 0 && y_int_cell >= 0) {
