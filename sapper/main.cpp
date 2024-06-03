@@ -17,7 +17,12 @@ public:
 		UnloadImage(default_image);
 		open = false;
 	}
-	
+	~cell() {
+		UnloadTexture(texture);
+		UnloadTexture(default_texture);
+		
+		
+	}
 	int get_condition() {
 		return condition;
 	}
